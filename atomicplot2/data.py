@@ -10,10 +10,9 @@ import operator
 from atom.api import Atom, Dict, Str, Typed, Float, Event, List
 
 from itertools import repeat
-from .fit import Fit1D
-from .plot import Plot1D
 from .base import UpdateArray
-
+from atomicplot2.plot import Plot1D
+from atomicplot2.fit import Fit1D
 
 
 # todo allow subslicing of dataset and dataobjects
@@ -124,9 +123,6 @@ class DataObjectBase(DataBase):
     def median(self):
         return np.median(self.y)
 
-
-
-
 # todo allows resizing of _xdata and _ydata simultaneously without breaking plotting
 #todo allow saving to file
 class DataObject(DataObjectBase):
@@ -137,6 +133,9 @@ class DataObject(DataObjectBase):
     y = Typed(np.ndarray)
     x_updated = Event(kind=bool)
     y_updated = Event(kind=bool)
+
+    from atomicplot2.fit import Fit1D
+    from atomicplot2.plot import Plot1D
 
     fit = Typed(Fit1D)
     plot = Typed(Plot1D)
@@ -163,7 +162,7 @@ class DataObject(DataObjectBase):
         self.fit = Fit1D(self)
         self.plot = Plot1D(self)
 
-        super().__init__(*args, **kwargs)
+        super(DataObject, self).__init__(*args, **kwargs)
 
 
     def savetxt(self, file_path, **kwargs):

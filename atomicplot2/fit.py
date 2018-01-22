@@ -1,8 +1,11 @@
-from atom.api import Atom, Bool, Typed, observe, Value
+from atom.api import Atom, Bool, Typed, observe, Value, ForwardInstance
 from symfit.api import Fit, Model, Parameter, Variable, exp
 import numpy as np
-from .data import DataObject
-from .plot import Plot1D
+
+import atomicplot2 as ap
+
+
+
 
 class FitObject(Atom):
     pass
@@ -11,15 +14,22 @@ class FitObject(Atom):
 class Fit1D(FitObject):
     'class for fitting 1d datasets'
 
-    parent = Typed(DataObject)
+    parent = ForwardInstance(lambda: ap.data.DataObject)
+    plot = ForwardInstance(lambda: ap.plot.Plot1D)
+
+
     fitted = Bool(default=False) # boolean which indicates if current model and data are fitted
-    _model = Value
+
+    _model = Value()
+    result = Value()
+
     _fit = Typed(Fit)
-    plot = Typed(Plot1D)
 
     def __init__(self, parent, *args, **kwargs):
-        super(self, Fit1D).__init__(*args, **kwargs)
         self.parent = parent
+        super(Fit1D, self).__init__(*args, **kwargs)
+
+
         self.result = None
 
     def add_model(self, model):
