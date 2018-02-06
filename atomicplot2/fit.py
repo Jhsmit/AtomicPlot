@@ -14,9 +14,8 @@ class FitObject(Atom):
 class Fit1D(FitObject):
     'class for fitting 1d datasets'
 
-    parent = ForwardInstance(lambda: ap.data.DataObject)
+    parent = ForwardInstance(lambda: ap.data.XYDataObject)
     plot = ForwardInstance(lambda: ap.plot.Plot1D)
-
 
     fitted = Bool(default=False) # boolean which indicates if current model and data are fitted
 
@@ -28,7 +27,6 @@ class Fit1D(FitObject):
     def __init__(self, parent, *args, **kwargs):
         self.parent = parent
         super(Fit1D, self).__init__(*args, **kwargs)
-
 
         self.result = None
 

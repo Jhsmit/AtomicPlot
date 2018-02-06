@@ -53,15 +53,15 @@ class DataObjectBase(DataBase):
 
     def __pow__(self, power, modulo=None):
         if modulo is not None:
-            return DataObject(self.x, pow(self.y, power, modulo))  # todo add test for this
+            return XYDataObject(self.x, pow(self.y, power, modulo))  # todo add test for this
         else:
             return self.operate(power, operator.pow, self.func_op)
 
     def __neg__(self):
-        return DataObject(self.x, -self.y)
+        return XYDataObject(self.x, -self.y)
 
     def __abs__(self):
-        return DataObject(self.x, np.absolute(self.y))
+        return XYDataObject(self.x, np.absolute(self.y))
 
     def __isub__(self, other):
         return self.operate(other, operator.sub, self.func_iop)
@@ -96,7 +96,7 @@ class DataObjectBase(DataBase):
         return self
 
     def func_op(self, x, y):
-        return DataObject(x, y)  #todo if in the future different types of dataobjects are supported, find correct type and return it
+        return XYDataObject(x, y)  #todo if in the future different types of dataobjects are supported, find correct type and return it
 
     def max(self):
         return np.max(self.y)
@@ -125,7 +125,9 @@ class DataObjectBase(DataBase):
 
 # todo allows resizing of _xdata and _ydata simultaneously without breaking plotting
 #todo allow saving to file
-class DataObject(DataObjectBase):
+
+
+class XYDataObject(DataObjectBase):
     #might be up for a refactoring of the name if theres also going to be 2d data objects (XYDataObject, ListObject?)
     """ has x and y array"""
     label = Str('')
@@ -162,7 +164,7 @@ class DataObject(DataObjectBase):
         self.fit = Fit1D(self)
         self.plot = Plot1D(self)
 
-        super(DataObject, self).__init__(*args, **kwargs)
+        super(XYDataObject, self).__init__(*args, **kwargs)
 
 
     def savetxt(self, file_path, **kwargs):
