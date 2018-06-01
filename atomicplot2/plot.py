@@ -58,7 +58,6 @@ class Plot1D(Atom):
         else:
             del self._y_dict['_zero']
 
-
     def _apply_functions(self, functions, result):
         if functions:
             for f_key, content in functions.items():
@@ -66,13 +65,13 @@ class Plot1D(Atom):
                 result = func(result, *args, **kwargs)
         return result
 
+
 class AtomAxes(Atom):
     """axis for matplot, has reference to which plots, takes care of updateing etc"""
 
     mp_parent = ForwardInstance(lambda: MatPlot)  #todo figure out if its needed
     axes = Instance(Axes)
     data_objects = Dict(default={})
-
 
     def __init__(self, mp_parent, axes):
         self.mp_parent = mp_parent
@@ -107,7 +106,6 @@ class AtomAxes(Atom):
         print('redrawing')
 
 
-
 class MatPlot(Atom):
     """
     Overall class for matplotlib figure. can have several child axes instances.
@@ -123,10 +121,9 @@ class MatPlot(Atom):
                 subplot_kw=None, gridspec_kw=None, **fig_kw):
         super(MatPlot, self).__init__()
 
-        self.fig, _axes = plt.subplots(nrows=1, ncols=1, sharex=sharex, sharey=sharey, squeeze=squeeze,
-                                       subplot_kw=subplot_kw, gridspec_kw=gridspec_kw, **fig_kw)
-        print(type(_axes))
-        self._axes = _axes
+        self.fig, self._axes = plt.subplots(nrows=1, ncols=1, sharex=sharex, sharey=sharey, squeeze=squeeze,
+                                            subplot_kw=subplot_kw, gridspec_kw=gridspec_kw, **fig_kw)
+
         if isinstance(self._axes, np.ndarray):
             self.axes = np.array([AtomAxes(self, ax) for ax in self._axes]).reshape(nrows, ncols)
         else:
