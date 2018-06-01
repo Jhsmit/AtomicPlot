@@ -1,12 +1,10 @@
 from ipywidgets import widgets
-from IPython.display import display, clear_output
+from IPython.display import display
 import numpy as np
-from atom.api import Atom, Event, Bool, Str, Float, Typed, ForwardInstance, Dict, Property, Instance, observe, List, Enum, Callable, Range, ContainerList, Int
 
-from matplotlib.figure import Figure
 
 class BrowseGraph(object):
-
+    """Does magic on your data in jupyter notebooks"""
     def __init__(self, iterable, func, fig):
         self._iterable = iterable
         self.func = func
@@ -59,4 +57,4 @@ class BrowseGraph(object):
         for ax in self.axes:
             ax.clear()
 
-        self.func(self.fig, self._iterable[self.idx])
+        self.func(self._iterable[self.idx], self.fig)
