@@ -1,4 +1,4 @@
-from atomicplot2.data import XYDataObject
+from atomicplot.data import XYDataObject
 import unittest
 import numpy as np
 

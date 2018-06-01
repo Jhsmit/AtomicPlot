@@ -1,5 +1,5 @@
-from atomicplot2.data import XYDataObject
-from atomicplot2.plot import MatPlot
+from atomicplot.data import XYDataObject
+from atomicplot.plot import MatPlot
 
 
 d = XYDataObject([1,2,3], [4,5,6])

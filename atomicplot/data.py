@@ -11,8 +11,8 @@ from atom.api import Atom, Dict, Str, Typed, Float, Event, List
 
 from itertools import repeat
 from .base import UpdateArray
-from atomicplot2.plot import Plot1D
-from atomicplot2.fit import Fit1D
+from atomicplot.plot import Plot1D
+from atomicplot.fit import Fit1D
 
 
 # todo allow subslicing of dataset and dataobjects
@@ -136,8 +136,8 @@ class XYDataObject(DataObjectBase):
     x_updated = Event(kind=bool)
     y_updated = Event(kind=bool)
 
-    from atomicplot2.fit import Fit1D
-    from atomicplot2.plot import Plot1D
+    from atomicplot.fit import Fit1D
+    from atomicplot.plot import Plot1D
 
     fit = Typed(Fit1D)
     plot = Typed(Plot1D)

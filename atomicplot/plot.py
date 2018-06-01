@@ -2,7 +2,7 @@ from matplotlib.lines import Line2D
 from matplotlib.axes import Axes, SubplotBase, subplot_class_factory
 from matplotlib.figure import Figure
 from atom.api import Atom, Event, Bool, Str, Float, Typed, ForwardInstance, Dict, Property, Instance, observe, List, Enum
-import atomicplot2 as ap
+import atomicplot as ap
 from .base import PlotFunctionsDict
 import numpy as np
 import matplotlib.pyplot as plt

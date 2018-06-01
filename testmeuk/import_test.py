@@ -1,3 +1,3 @@
-import atomicplot2.plot as ap
+import atomicplot.plot as ap
 
 f = ap.Plot1D

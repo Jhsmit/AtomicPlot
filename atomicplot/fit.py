@@ -2,7 +2,7 @@ from atom.api import Atom, Bool, Typed, observe, Value, ForwardInstance
 from symfit.api import Fit, Model, Parameter, Variable, exp
 import numpy as np
 
-import atomicplot2 as ap
+import atomicplot as ap
 
 
 
