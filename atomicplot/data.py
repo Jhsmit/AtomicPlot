@@ -1,16 +1,9 @@
 __author__ = 'Smit'
 import numpy as np
-
-import seaborn as sns
-import os
-
-
-from collections import OrderedDict
 import operator
-from atom.api import Atom, Dict, Str, Typed, Float, Event, List
-
-from itertools import repeat
+from atom.api import Atom, Dict, Str, Typed, Float, Event, List, observe
 from .base import UpdateArray
+
 from atomicplot.plot import Plot1D
 from atomicplot.fit import Fit1D
 
@@ -142,7 +135,7 @@ class XYDataObject(DataObjectBase):
     fit = Typed(Fit1D)
     plot = Typed(Plot1D)
 
-    file_path = Str # Optional file path pointing to original data file
+    file_path = Str  # Optional file path pointing to original data file
 
     def __init__(self, x, y, *args, **kwargs):
         if not isinstance(x, (np.ndarray, list)):
@@ -166,9 +159,24 @@ class XYDataObject(DataObjectBase):
 
         super(XYDataObject, self).__init__(*args, **kwargs)
 
+    @observe('x_updated')
+    def testfunc(self, new):
+        print('x updated in dataobject')
+
+    @observe('y_updated')
+    def testfunc(self, new):
+        print('y updated in dataobject')
+
+    @observe('y')
+    def tf1(self, new):
+        print('fully y updated')
 
     def savetxt(self, file_path, **kwargs):
         pass
         #todo implement this
+
+    def reset(self):
+        """restores x, y with data which it was initialized"""
+        raise NotImplementedError()
 
 

@@ -1,6 +1,7 @@
 import numpy as np
 from collections import OrderedDict
 
+
 class UpdateArray(np.ndarray):
 
     def __new__(cls, input_array, updated, info=None):

@@ -12,7 +12,7 @@ from matplotlib.gridspec import GridSpec
 
 class Plot1D(Atom):
     """plot attribute on dataobject"""
-    updated = Event()
+    updated = Event(kind=bool)
 
     x = Property()
     y = Property()
@@ -21,6 +21,7 @@ class Plot1D(Atom):
     _y_dict = Instance(PlotFunctionsDict)
 
     parent = ForwardInstance(lambda: ap.data.XYDataObject)
+    line = Instance(Line2D)
 
     norm = Bool(False)
     zero = Bool(False)
@@ -50,6 +51,8 @@ class Plot1D(Atom):
         else:
             del self._y_dict['_norm']
 
+        self._update_y('')
+
     @observe('zero')
     def _zero_changed(self, change):
         if change['value']:
@@ -58,12 +61,29 @@ class Plot1D(Atom):
         else:
             del self._y_dict['_zero']
 
-    def _apply_functions(self, functions, result):
+        self._update_y('')
+
+    @staticmethod
+    def _apply_functions(functions, result):
         if functions:
             for f_key, content in functions.items():
                 func, args, kwargs = content  # todo make args kwargs optional
                 result = func(result, *args, **kwargs)
         return result
+
+    @observe('parent.x_updated')
+    def _update_x(self):
+        print('update in in plot1d')
+        self.line.set_xdata(self.x)
+
+    @observe(['parent.y_updated', 'parent.y'])
+    def _update_y(self, new):
+        print('update y in plot1d')
+        print(self.y)
+        if self.line:
+            self.line.set_ydata(self.y)
+
+        self.updated = True
 
 
 class AtomAxes(Atom):
@@ -87,12 +107,12 @@ class AtomAxes(Atom):
         self.remove_dataobject(other)
 
     def add_dataobject(self, data_obj):
-
         uid = id(data_obj)
         if uid in self.data_objects:
             raise KeyError('Data object already added') #todo print the label and shite
 
         self.data_objects[uid] = data_obj
+        data_obj.plot.line = self.axes.plot(data_obj.plot.x, data_obj.plot.y)[0]
 
         data_obj.plot.observe('updated', self.redraw_plot)
 
@@ -104,6 +124,8 @@ class AtomAxes(Atom):
     def redraw_plot(self, change):
         print(change)
         print('redrawing')
+        self.axes.relim()
+        self.axes.autoscale_view()
 
 
 class MatPlot(Atom):
@@ -129,19 +151,26 @@ class MatPlot(Atom):
         else:
             self.axes = AtomAxes(self, self._axes)
 
-    def __add__(self, other):
+    def __iadd__(self, other):
         if isinstance(self.axes, AtomAxes):
             self.axes.add_dataobject(other)
         else:
             raise ValueError('Please add the DataObject to the appropriate axes')
+        return self
 
-    def __sub__(self, other):
+    def __isub__(self, other):
         if isinstance(self.axes, AtomAxes):
             self.axes.remove_dataobject(other)
         else:
             raise ValueError('Please add the DataObject to the appropriate axes')
 
+    @staticmethod
+    def show(*args, **kwargs):
+        plt.show(*args, **kwargs)
 
+    @staticmethod
+    def savefig(*args, **kwargs):
+        plt.savefig(*args, **kwargs)
 
 
 
